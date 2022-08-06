@@ -1,8 +1,17 @@
-const express = require('express')
-const router = express.Router()
-const { registerPerekrut, activation } = require('../controller/authController')
+/** @format */
 
-router.post('/register-perekrut', registerPerekrut)
-router.get('/activation/:profile_id', activation)
+const express = require('express');
+const router = express.Router();
+const {
+	registerPekerja,
+	registerPerekrut,
+	activation,
+	login,
+} = require('../controller/authController');
 
-module.exports = router
+router.post('/register-perekrut', registerPerekrut);
+router.post('/register-pekerja', registerPekerja);
+router.get('/activation/:profile_id', activation);
+router.post('/login', login);
+
+module.exports = router;
