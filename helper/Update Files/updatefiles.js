@@ -22,7 +22,6 @@ const updatecover = (profile_id) => {
 				console.log('Data Foto Tidak ada , Tidak Ada Foto Profil yang diganti');
 				return 0;
 			} else {
-				console.log('ini picturenya', result[0].profile_picture);
 				deletecover(`./uploads/${result[0].profile_picture}`);
 				return 1;
 			}
