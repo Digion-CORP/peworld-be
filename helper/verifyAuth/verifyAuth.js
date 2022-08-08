@@ -3,8 +3,8 @@ const db = require('../mysql');
 const jwt = require('jsonwebtoken');
 const Auth = {
 	VerifyToken: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
 			jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decoded) {
 				if (err) {
 					return res.status(404).send({
@@ -29,7 +29,7 @@ const Auth = {
 		}
 	},
 	VerifyUser: (req, res, next) => {
-		console.log(req.headers);
+	
 		if (req.headers.authorization) {
 			const token = req.headers.authorization.split(' ')[1];
 			console.log(token, 'weew');
@@ -58,8 +58,8 @@ const Auth = {
 		}
 	},
 	VerifyUpdateProfilePekerja: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
 			const { profile_id } = req.query;
 			jwt.verify(
 				token,
@@ -111,8 +111,8 @@ const Auth = {
 		}
 	},
 	VerifyUpdateProfilePerekrut: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
 			const { profile_id } = req.query;
 			jwt.verify(
 				token,
@@ -164,8 +164,8 @@ const Auth = {
 		}
 	},
 	VerifyDeleteProfile: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
 			const { profile_id } = req.query;
 			jwt.verify(
 				token,
@@ -214,8 +214,8 @@ const Auth = {
 		}
 	},
 	VerifyAdminRole: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
 			jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decoded) {
 				if (err) {
 					return res.status(404).send({
@@ -236,8 +236,8 @@ const Auth = {
 		}
 	},
 	VerifyAuthor: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
 			jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decoded) {
 				if (err) {
 					return res.status(404).send({

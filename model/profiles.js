@@ -82,13 +82,19 @@ module.exports = {
 			} = req.body;
 			const { profile_id } = req.query;
 			if (req.file) {
+				console.log(
+					FileValidation(req.file.filename),
+					'ini file validationnya'
+				);
 				if (FileValidation(req.file.filename) != 1) {
+					console.log('masuk ke sini 2');
 					reject({
 						success: false,
 						message:
 							'Format File Tidak Didukung ! , Format Yang Di Izinkan : Jpg,Png,Jpeg,Webp',
 					});
 				} else {
+					console.log('masuk ke sini 2');
 					if (updatecover(profile_id) == 0) {
 						reject({
 							success: false,
@@ -110,7 +116,7 @@ module.exports = {
 									console.log('error disini 2');
 									resolve({
 										success: true,
-										message: 'Artikel Profile Di Update',
+										message: 'Profile Berhasil Di Update',
 										result,
 									});
 								}

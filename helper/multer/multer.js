@@ -31,7 +31,8 @@ const upload = multer({
 			// cb(new Error('only .png, .jpg, .gif, jpeg format allowed'),false)
 			return req.res.send({
 				success: false,
-				message: 'only .png, .jpg, .gif, jpeg , webp format allowed',
+				message:
+					'Format File Tidak Didukung ! , Format Yang Di Izinkan : Jpg,Png,Jpeg,Webp,Gif',
 			});
 		}
 		cb(null, true);
