@@ -19,4 +19,10 @@ router.patch(
 	profileController.UpdateProfilePerekrut
 );
 
+router.delete(
+	'/',
+	verifyAuth.VerifyDeleteProfile,
+	profileController.deleteProfile
+);
+
 module.exports = router;

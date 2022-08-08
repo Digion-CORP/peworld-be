@@ -13,5 +13,3 @@ const FileValidation = (FileName) => {
 		return 0;
 	}
 };
-
-module.exports = FileValidation;

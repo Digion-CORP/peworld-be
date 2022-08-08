@@ -43,13 +43,11 @@ module.exports = {
                            where profile_id = '${profile_id}'`,
 							(err, result) => {
 								if (err) {
-									console.log(`error disini , ${err}`);
 									reject({
 										success: false,
 										message: 'Data Profile Tidak Berhasil Di Update',
 									});
 								} else {
-									console.log('error disini 2');
 									resolve({
 										success: true,
 										message: 'Artikel Profile Di Update',
@@ -126,6 +124,85 @@ module.exports = {
 					message: 'Foto Profile Tidak Boleh Kosong',
 				});
 			}
+		});
+	},
+	getAllAcceptedprofile: (req, res) => {
+		//get All Movies With Join
+		return new Promise((resolve, reject) => {
+			const { limit, page, order_by, sort } = req.query;
+			let offset = page * limit - limit;
+			db.query(
+				`SELECT profile_name , profile_picture , profile_job , profile_job_type , profile_location from profiles where profile_role = 'pekerja' ORDER BY ${order_by} ${sort} limit ${limit} OFFSET ${offset} `,
+				(error, result) => {
+					db.query(
+						`SELECT * from profile where profile_status = 'accepted'`,
+						(error2, result2) => {
+							let totalpage = Math.ceil(result2.length / limit);
+							if (error || error2) {
+								console.log(error, 'ini error 1', error2, 'ini error 2');
+								reject({
+									message: `Failed To Get All Accepted profile , ${error} ,error ,${error2}`,
+									status: 400,
+								});
+							} else {
+								db.query(
+									`select profile_comment.profile_id, profile_comment.profile_id, profiles.profile_name,profile_comment.comment_message from profile_comment INNER JOIN profiles On profile_comment.profile_id = profiles.profile_id `,
+									(errcomment, resultcomment) => {
+										console.log(resultcomment, 'Ini result Commentnya');
+
+										resolve({
+											message: 'Get All Accepted profile Success',
+											status: 200,
+											totalpage: totalpage,
+											totalRow: result.length,
+											totaldata: result2.length,
+											list: {
+												profile: result,
+												comment: resultcomment,
+											},
+										});
+									}
+								);
+							}
+						}
+					);
+				}
+			);
+		});
+	},
+	DeleteProfile: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { profile_id } = req.query;
+			db.query(
+				`select * from profiles where profile_id = ${profile_id}`,
+				(err, result) => {
+					if (!result.length || err) {
+						reject({
+							success: false,
+							message: `Profile Dengan  ID = ${profile_id} Tidak Ditemukan `,
+						});
+					} else {
+						deletecover(`./uploads/${result[0].profile_picture}`);
+						db.query(
+							`delete from profiles where profile_id = "${profile_id}" `,
+							(err, result) => {
+								if (err) {
+									reject({
+										success: false,
+										message: `Gagal Menghapus Profile , ${err} `,
+									});
+								} else {
+									resolve({
+										success: true,
+										message: `Profile dengan Profile ID = ${profile_id} Berhasil Dihapus`,
+										result,
+									});
+								}
+							}
+						);
+					}
+				}
+			);
 		});
 	},
 };
