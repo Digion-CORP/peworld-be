@@ -4,7 +4,7 @@ const {
 	addExperience,
 	updateExperience,
 	removeExperience,
-} = require("../model/experienceModels")
+} = require("../model/experience")
 
 const getAllExperiences = async (req, res) => {
 	try {
