@@ -19,8 +19,8 @@ module.exports = {
 					});
 				} else {
 					db.query(
-						`INSERT into portofolio (portofolio_name,portofolio_picture,portofolio_repo) 
-					   Values ("${portofolio_name}","${req.file.filename}","${portofolio_repo}")`,
+						`INSERT into portofolio (profile_id ,portofolio_name,portofolio_picture,portofolio_repo) 
+					   Values ( "${profile_id}","${portofolio_name}","${req.file.filename}","${portofolio_repo}")`,
 						(err, result) => {
 							if (err) {
 								reject({
