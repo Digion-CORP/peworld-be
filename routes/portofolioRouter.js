@@ -12,4 +12,14 @@ router.post(
 	upload.single('portofolio_picture'),
 	portofolioController.addPortofolio
 );
+router.get('/', portofolioController.getPortofolio);
+router.patch(
+	'/',
+	verifyAuth.VerifyUser,
+	upload.single('portofolio_picture'),
+	portofolioController.updatePortofolio
+);
+router.delete('/', portofolioController.deletePortofolio);
 module.exports = router;
+
+//
