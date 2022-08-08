@@ -28,5 +28,24 @@ const updatecover = (profile_id) => {
 		}
 	);
 };
+const updatecoverportofolio = (profile_id) => {
+	db.query(
+		`select portofolio_picture from portofolio where profile_id = ${profile_id}`,
+		(err, result) => {
+			if (err) {
+				console.log('error di db query');
+				return 0;
+			} else if (!result.length) {
+				console.log(
+					'Data Foto Tidak ada , Tidak Ada Foto Portofolio yang diganti'
+				);
+				return 0;
+			} else {
+				deletecover(`./uploads/${result[0].portofolio_picture}`);
+				return 1;
+			}
+		}
+	);
+};
 
-module.exports = { deletecover, updatecover };
+module.exports = { deletecover, updatecover, updatecoverportofolio };

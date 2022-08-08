@@ -5,19 +5,28 @@ module.exports = {
 	getSkillByID: (req, res) => {
 		return new Promise((resolve, reject) => {
 			const { profile_id } = req.query;
-			const sql = `SELECT  skill_name from skill WHERE profile_id =${profile_id}`;
+			const sql = `SELECT skill_id, skill_name from skill WHERE profile_id =${profile_id}`;
 			db.query(sql, (err, result) => {
 				if (err) {
 					reject({
 						success: false,
 						message: `Get Skill Failed , ${err}`,
 					});
-				} else if ((profile_id, result)) {
-					resolve({
-						success: true,
-						message: 'Get Skill Success',
-						data: result,
-					});
+				} else if (profile_id, result) {
+					if (result.length == 0)
+					{
+							reject({
+								success: false,
+								message: 'You Don`t Have Any Skills',
+							});
+					}
+					else {
+						resolve({
+							success: true,
+							message: 'Get Skill Success',
+							data: result,
+						});
+					}
 				}
 			});
 		});
@@ -43,8 +52,8 @@ module.exports = {
 	},
 	deleteSkill: (req, res) => {
 		return new Promise((resolve, reject) => {
-			const { profile_id, skill_name } = req.query;
-			const sql = `DELETE FROM skill WHERE profile_id =${profile_id} AND skill_name = '${skill_name.toLowerCase()}' `;
+			const { profile_id, skill_id } = req.query;
+			const sql = `DELETE FROM skill WHERE profile_id =${profile_id} AND skill_id = ${skill_id} `;
 			db.query(sql, (err, result) => {
 				if (err) {
 					reject({
@@ -54,7 +63,7 @@ module.exports = {
 				} else if (result.affectedRows == 0) {
 					reject({
 						success: false,
-						message: `Skil Name ${skill_name} on profile ID= ${profile_id} Not Found`,
+						message: `Skil ID ${skill_id} on profile ID= ${profile_id} Not Found`,
 					});
 				} else {
 					resolve({
@@ -68,9 +77,9 @@ module.exports = {
 	},
 	updateSkill: (req, res) => {
 		return new Promise((resolve, reject) => {
-			const { profile_id } = req.query;
-			const { skill_name_new, skill_name_old } = req.body;
-			const sql = `UPDATE skill SET skill_name = '${skill_name_new.toLowerCase()}' WHERE profile_id = ${profile_id} AND skill_name ='${skill_name_old}' `;
+			const { profile_id, skill_id } = req.query;
+			const { skill_name } = req.body;
+			const sql = `UPDATE skill SET skill_name = '${skill_name.toLowerCase()}' WHERE profile_id = ${profile_id} AND skill_id ='${skill_id}' `;
 			db.query(sql, (err, result) => {
 				if (err) {
 					reject({
@@ -80,7 +89,7 @@ module.exports = {
 				} else if (result.affectedRows == 0) {
 					reject({
 						success: false,
-						message: `Skil Name ${skill_name_old} on profile ID= ${profile_id} Not Found`,
+						message: `Skil ID = ${skill_id} on profile ID= ${profile_id} Not Found`,
 					});
 				} else {
 					resolve({
