@@ -28,3 +28,5 @@ const updatecover = (profile_id) => {
 		}
 	);
 };
+
+module.exports = { deletecover, updatecover };

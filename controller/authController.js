@@ -47,19 +47,18 @@ module.exports = {
 				!profile_email ||
 				!profile_password ||
 				!profile_company ||
-				!profile_sub_company
+				!profile_sub_company ||
+				!profile_phone_number
 			) {
 				return res
 					.status(404)
 					.json({ success: false, message: 'Error: Fields must be filled' });
 			}
 			if (profile_password.length < 8) {
-				return res
-					.status(404)
-					.json({
-						success: false,
-						message: 'Error: Password must be more than 8 characters',
-					});
+				return res.status(404).json({
+					success: false,
+					message: 'Error: Password must be more than 8 characters',
+				});
 			}
 			const setData = {
 				profile_name,
@@ -68,6 +67,7 @@ module.exports = {
 				profile_company,
 				profile_sub_company,
 				profile_phone_number,
+				profile_role,
 			};
 			const result = await Auth.registerPerekrut(setData, profile_id);
 			return res

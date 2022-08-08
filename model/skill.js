@@ -7,7 +7,6 @@ module.exports = {
 			const { profile_id } = req.query;
 			const sql = `SELECT  skill_name from skill WHERE profile_id =${profile_id}`;
 			db.query(sql, (err, result) => {
-				console.log(profile_id, 'ini profilenya');
 				if (err) {
 					reject({
 						success: false,
