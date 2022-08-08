@@ -2,6 +2,10 @@
   "name": "peworld-be",
   "version": "1.0.0",
   "description": "peworld backend",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
   "main": "index.js",
   "author": "digion-corp",
   "license": "MIT",
@@ -11,10 +15,13 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
-    "nodemailer": "^6.7.7"
+    "nodemailer": "^6.7.7",
+    "nodemailer-express-handlebars": "^5.0.0",
+    "path": "^0.12.7"
   }
 }
