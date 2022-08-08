@@ -20,4 +20,12 @@ module.exports = {
 			res.status(400).send(error);
 		}
 	},
+	deleteProfile: async (req, res) => {
+		try {
+			const result = await Profile.DeleteProfile(req, res);
+			res.status(200).send(result);
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	},
 };

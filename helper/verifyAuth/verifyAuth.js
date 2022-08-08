@@ -160,41 +160,41 @@ const Auth = {
 			});
 		}
 	},
-	VerifyDeleteComment: (req, res, next) => {
+	VerifyDeleteProfile: (req, res, next) => {
 		if (req.headers.token) {
 			const token = req.headers.token;
-			const { comment_id } = req.query;
+			const { profile_id } = req.query;
 			jwt.verify(
 				token,
 				process.env.JWT_SECRET_KEY,
 				function (errVerify, decoded) {
 					if (errVerify) {
 						return res.status(404).send({
+							success: false,
 							message: 'INVALID TOKEN',
 						});
 					} else {
 						db.query(
-							`SELECT profile_id from post_comment where comment_id = '${comment_id}'`,
+							`SELECT profile_id from profiles where profile_id = '${profile_id}'`,
 							(err, result) => {
 								if (err) {
 									return res.status(404).send({
-										message: 'GAGAL MENGIDENTIFIKASI POST ID & PROFILE_ID',
+										success: false,
+										message: 'Failed To Identify Profile ID',
 									});
 								} else if (!result.length) {
 									return res.status(404).send({
-										message: 'DATA TIDAK DITEMUKAN',
+										success: false,
+										message: 'Data Not Found',
 									});
 								} else {
-									const profile_id = result[0].profile_id;
-									if (
-										profile_id == decoded.profile_id ||
-										decoded.role == process.env.ROLE_ADMIN
-									) {
+									if (profile_id == decoded.profile_id) {
 										next();
 									} else {
 										return res.status(404).send({
+											success: false,
 											message:
-												'KAMU TIDAK MEMILIKI AKSES UNTUK MENGEDIT ARTIKEL INI',
+												'YOU`RE NOT AUTHENTICATED TO DELETE THIS PROFILE !',
 										});
 									}
 								}
@@ -205,6 +205,7 @@ const Auth = {
 			);
 		} else {
 			return res.status(404).send({
+				success: false,
 				message: 'KAMU HARUS LOGIN DULU !!',
 			});
 		}
