@@ -11,6 +11,12 @@ module.exports = {
 			res.status(400).send(error);
 		}
 	},
+	getPortofolio: async (req, res) => {
+		try {
+			const result = await portofolio.getPortofolioByID(req, res);
+			res.status(200).send(result);
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	},
 };
-
-//

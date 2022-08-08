@@ -45,6 +45,24 @@ module.exports = {
 			}
 		});
 	},
+	getPortofolioByID: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { profile_id } = req.query;
+			const sql = `SELECT  portofolio_name , portofolio_picture ,portofolio_repo from portofolio WHERE profile_id =${profile_id}`;
+			db.query(sql, (err, result) => {
+				if (err) {
+					reject({
+						success: false,
+						message: `Get Portofolio Failed , ${err}`,
+					});
+				} else if ((profile_id, result)) {
+					resolve({
+						success: true,
+						message: 'Get Portofolio Success',
+						data: result,
+					});
+				}
+			});
+		});
+	},
 };
-
-//

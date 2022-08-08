@@ -12,6 +12,7 @@ router.post(
 	upload.single('portofolio_picture'),
 	portofolioController.addPortofolio
 );
+router.get('/', portofolioController.getPortofolio);
 module.exports = router;
 
 //
