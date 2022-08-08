@@ -178,4 +178,52 @@ module.exports = {
 			);
 		});
 	},
+	checkEmail: (profile_email) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`SELECT profile_email from profiles WHERE profile_email='${profile_email}'`,
+				(err, result) => {
+					if (err) {
+						reject(`${err.sqlMessage}`);
+					}
+					resolve({
+						result,
+					});
+				}
+			);
+			// console.log(dbQuery.sql)
+		});
+	},
+	generateCode: (profile_email, code) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`UPDATE profiles SET profile_key='${code}' WHERE profile_email='${profile_email}'`,
+				(err, result) => {
+					if (err) {
+						reject(`${err.sqlMessage}`);
+					}
+					resolve({
+						result,
+					});
+				}
+			);
+			// console.log(dbQuery.sql)
+		});
+	},
+	confirmPass: (profile_email, profile_password) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`UPDATE profiles SET profile_password = '${profile_password}',profile_key = '' WHERE profile_email = '${profile_email}'`,
+				(error, result) => {
+					if (error) {
+						reject({
+							success: false,
+							message: error.sqlMessage,
+						});
+					}
+					resolve(result);
+				}
+			);
+		});
+	},
 };

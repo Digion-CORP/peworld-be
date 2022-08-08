@@ -29,8 +29,10 @@ const Auth = {
 		}
 	},
 	VerifyUser: (req, res, next) => {
-		if (req.headers.token) {
-			const token = req.headers.token;
+		console.log(req.headers);
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
+			console.log(token, 'weew');
 			const { profile_id } = req.query;
 			jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decoded) {
 				if (err) {
@@ -44,6 +46,7 @@ const Auth = {
 						message: 'INI BUKAN AKUN KAMU !!',
 					});
 				} else {
+					req.dadada = decoded;
 					next();
 				}
 			});

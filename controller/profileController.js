@@ -1,6 +1,5 @@
 /** @format */
 const Profile = require('../model/profiles');
-
 module.exports = {
 	UpdateProfilePekerja: async (req, res) => {
 		//add New post From Body
