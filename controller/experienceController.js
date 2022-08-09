@@ -8,7 +8,7 @@ const {
 
 const getAll = async (req, res) => {
 	try {
-		const results = await getAllExperiences()
+		const results = await getAllExperiences(req, res)
 		res.status(200).json(results)
 	} catch (error) {
 		res.status(400).json(error)

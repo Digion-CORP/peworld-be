@@ -1,31 +1,25 @@
 const db = require("../helper/mysql")
 const tb_exp = "experience"
 const getAllExperiences = async (req, res) => {
-	const profile_id = req.params.profile_id
-	new Promise((resolve, reject) => {
-		const sqlQuery = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
+	// const profile_id = req.params.profile_id
+	return new Promise((resolve, reject) => {
+		const sqlQuery = `SELECT * FROM ${tb_exp}`
 		db.query(sqlQuery, (error, results) => {
 			if (error) {
 				reject({
 					success: false,
-					status: 500,
 					message: "Error while getting experience",
 					data: error,
 				})
-				if (results.length === 0) {
-					reject({
-						success: false,
-						status: 400,
-						message: "No experience found",
-						data: error,
-					})
-				}
-			} 
-
-			else {
+			} else if (results.length === 0) {
+				reject({
+					success: false,
+					message: "No experience found",
+					data: [],
+				})
+			} else {
 				resolve({
 					success: true,
-					status: 200,
 					message: "Successfully get experience",
 					data: results,
 				})
@@ -35,76 +29,82 @@ const getAllExperiences = async (req, res) => {
 }
 
 const getExperienceById = async (req, res) => {
-	new Promise((resolve, reject) => {
-		const sqlQuery = `SELECT * FROM ${tb_exp} WHERE profile_id = ${req.params.profile_id}`
+	return new Promise((resolve, reject) => {
+		const {profile_id} = req.query
+		const sqlQuery = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
 		db.query(sqlQuery, (error, results) => {
 			if (error) {
 				reject({
 					success: false,
-					status: 500,
 					message: "Error while getting experience",
 					data: error,
 				})
-			} else {
-				resolve({
-					success: true,
-					status: 200,
-					message: "Successfully get experience",
-					data: results,
-				})
+			} else if (results) {
+				if (results.length === 0) {
+					reject({
+						success: false,
+						message: "No experience found",
+						data: [],
+					})
+				}
+				else {
+					resolve({
+						success: true,
+						message: "Successfully get experience",
+						data: results,
+					})
+				}
+				
 			}
 		})
 	})
 }
 
 const addExperience = async (req, res) => {
-	const profile_id = req.body
-	const {
+	const {profile_id,
 		experience_company,
 		experience_position,
 		experience_date_start,
 		experience_date_end,
 		experience_description,
 	} = req.body
-	new Promise((resolve, reject) => {
-		const sqlQuery = `INSERT INTO ${tb_exp} (experience_company, experience_position, experience_date_start, experience_date_end, experience_description) VALUES ('${experience_company}', '${experience_position}', '${experience_date_start}', '${experience_date_end}', '${experience_description}')`
+	return new Promise((resolve, reject) => {
+		const sqlQuery = `INSERT INTO ${tb_exp} (profile_id, experience_company, experience_position, experience_date_start, experience_date_end, experience_description) VALUES ('${profile_id}','${experience_company}', '${experience_position}', '${experience_date_start}', '${experience_date_end}', '${experience_description}')`
 		db.query(sqlQuery, (error, results) => {
 			if (error) {
 				reject({
 					success: false,
-					status: 500,
 					message: "Error while adding experience",
 					data: error,
 				})
 			} else {
+				console.log(req.body, "sds")
 				resolve({
 					success: true,
-					status: 200,
 					message: "Successfully add experience",
-					data: {...req.body},
+					data: results,
 				})
-			}console.log(req.body, 'sds')
+			}
+			
 		})
 	})
 }
 
 const updateExperience = async (req, res) => {
-	const profile_id = req.params.profile_id
-	const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
-	new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
+		const {profile_id} = req.query
+		const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
 		db.query(querySelect, (error, results) => {
 			if (error) {
 				reject({
 					success: false,
-					status: 500,
 					message: "Error while getting experience",
 					data: error,
 				})
 			}
-			if (results.length === 0) {
+			else if (results.affectedRows === 0) {
 				reject({
 					success: false,
-					status: 404,
 					message: "Experience not found",
 					data: error,
 				})
@@ -118,18 +118,14 @@ const updateExperience = async (req, res) => {
 					if (error) {
 						reject({
 							success: false,
-							status: 500,
 							message: "Error while updating experience",
 							data: error,
 						})
 					} else {
 						resolve({
 							success: true,
-							status: 200,
 							message: "Successfully update experience",
-							data: {
-								id: profile_id,
-							},
+							data: results,
 						})
 					}
 				})
@@ -139,41 +135,37 @@ const updateExperience = async (req, res) => {
 }
 
 const removeExperience = async (req, res) => {
-	const profile_id = req.params.profile_id
-	const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
-	new Promise((resolve, reject) => {
+	return new Promise((resolve, reject) => {
+		const {profile_id, experience_company} = req.query
+		const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id} AND experience_company = '${experience_company}'`
+		const queryRemove = `DELETE FROM ${tb_exp} WHERE profile_id = ${profile_id} AND experience_company = '${experience_company}'`
 		db.query(querySelect, (error, results) => {
 			if (error) {
 				reject({
 					success: false,
-					status: 500,
 					message: "Error while getting experience",
 					data: error,
 				})
 			}
-			if (results.length === 0) {
+			else if (results.affectedRows === 0) {
 				reject({
 					success: false,
-					status: 404,
 					message: "Experience not found",
 				})
 			} else {
-				const queryRemove = `DELETE FROM ${tb_exp} WHERE profile_id = ${profile_id} AND experience_name = '${req.params.experience_name}'`
 				db.query(queryRemove, (error, results) => {
 					if (error) {
 						reject({
 							success: false,
-							status: 500,
 							message: "Error while removing experience",
 							data: error,
 						})
 					} else {
 						resolve({
 							success: true,
-							status: 200,
 							message: "Successfully remove experience",
 							data: {
-								id: insertId,
+								id: results,
 							},
 						})
 					}
@@ -183,10 +175,10 @@ const removeExperience = async (req, res) => {
 	})
 }
 
-module.exports ={
-    getAllExperiences,
-    getExperienceById,
-    addExperience,
-    updateExperience,
-    removeExperience
+module.exports = {
+	getAllExperiences,
+	getExperienceById,
+	addExperience,
+	updateExperience,
+	removeExperience,
 }
