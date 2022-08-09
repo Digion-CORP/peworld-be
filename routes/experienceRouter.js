@@ -9,10 +9,10 @@ const {
 } = require("../controller/experienceController")
 const verifyAuth = require("../helper/verifyAuth/verifyAuth")
 
-router.post("/", add)
+router.post("/", verifyAuth, add)
 
-router.get("/", getAll)
-router.get("/id", getById)
-router.patch("/:id", update)
-router.delete("/del", remove)
+router.get("/", verifyAuth, getAll)
+router.get("/id",verifyAuth, getById)
+router.patch("/:id",verifyAuth, update)
+router.delete("/del",verifyAuth, remove)
 module.exports = router
