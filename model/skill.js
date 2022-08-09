@@ -18,6 +18,7 @@ module.exports = {
 							reject({
 								success: false,
 								message: 'You Don`t Have Any Skills',
+								data: [],
 							});
 					}
 					else {

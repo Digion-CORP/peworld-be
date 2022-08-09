@@ -25,4 +25,6 @@ router.delete(
 	profileController.deleteProfile
 );
 
+router.get('/sort', profileController.GetProfileSort);
+router.get('/search', profileController.GetProfileSearch);
 module.exports = router;
