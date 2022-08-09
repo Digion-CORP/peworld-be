@@ -1,63 +1,17 @@
-const {
-	getAllExperiences,
-	getExperienceById,
-	addExperience,
-	updateExperience,
-	removeExperience,
-} = require("../model/experienceModels")
+const express = require("express")
+const router = express.Router()
+const {add, getAll,getById, update, remove}= require("../controller/experienceController")
+const verifyAuth = require("../helper/verifyAuth/verifyAuth")
 
-const getAllExperiences = async (req, res) => {
-	try {
-		const results = await getAllExperiences()
-		res.status(200).json(results)
-	} catch (error) {
-		res.status(400).json(error)
-	}
-}
+router.post("/", add)
 
-const getExperienceById = async (req, res) => {
-	try {
-		const results = await getExperienceById(req, res)
-		res.status(200).json(results)
-	} catch (error) {
-		res.status(400).json(error)
-	}
-}
-
-const addExperience = async (req, res) => {
-    try{
-        const results = await addExperience(req, res)
-        res.status(200).json(results)
-    }
-    catch(error){
-        res.status(400).json(error)
-    }
-}
-
-const updateExperience = async (req, res) => {
-    try{
-        const results = await updateExperience(req, res)
-        res.status(200).json(results)
-    }
-    catch(error){
-        res.status(400).json(error)
-    }
-}
-
-const removeExperience = async (req, res) => {
-    try{
-        const results = await removeExperience(req, res)
-        res.status(200).json(results)
-    }
-    catch(error){
-        res.status(400).json(error)
-    }
-}
-
-module.exports = {
-    getAllExperiences,
-    getExperienceById,
-    addExperience,
-    updateExperience,
-    removeExperience,
-}
+router.get("/",getAll)
+router.get("/:id",getById)
+router.patch(
+	"/:id",
+	verifyAuth.VerifyUser, update,
+)
+router.delete(
+	"/:id", remove,
+)
+module.exports = router

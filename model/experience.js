@@ -12,7 +12,17 @@ const getAllExperiences = async (req, res) => {
 					message: "Error while getting experience",
 					data: error,
 				})
-			} else {
+				if (results.length === 0) {
+					reject({
+						success: false,
+						status: 400,
+						message: "No experience found",
+						data: error,
+					})
+				}
+			} 
+
+			else {
 				resolve({
 					success: true,
 					status: 200,
@@ -53,11 +63,11 @@ const addExperience = async (req, res) => {
 		experience_company,
 		experience_position,
 		experience_date_start,
-		experience_end_date,
+		experience_date_end,
 		experience_description,
 	} = req.body
 	new Promise((resolve, reject) => {
-		const sqlQuery = `INSERT INTO ${tb_exp} (experience_company, experience_position, experience_date_start, experience_date_end, experience_description) VALUES ('${experience_company}', '${experience_position}', '${experience_date_start}', '${experience_end_date}', '${experience_description}')`
+		const sqlQuery = `INSERT INTO ${tb_exp} (experience_company, experience_position, experience_date_start, experience_date_end, experience_description) VALUES ('${experience_company}', '${experience_position}', '${experience_date_start}', '${experience_date_end}', '${experience_description}')`
 		db.query(sqlQuery, (error, results) => {
 			if (error) {
 				reject({
@@ -71,9 +81,9 @@ const addExperience = async (req, res) => {
 					success: true,
 					status: 200,
 					message: "Successfully add experience",
-					data: results,
+					data: {...req.body},
 				})
-			}
+			}console.log(req.body, 'sds')
 		})
 	})
 }
@@ -163,7 +173,7 @@ const removeExperience = async (req, res) => {
 							status: 200,
 							message: "Successfully remove experience",
 							data: {
-								id: profile_id,
+								id: insertId,
 							},
 						})
 					}

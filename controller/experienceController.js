@@ -6,7 +6,7 @@ const {
 	removeExperience,
 } = require("../model/experience")
 
-const getAllExperiences = async (req, res) => {
+const getAll = async (req, res) => {
 	try {
 		const results = await getAllExperiences()
 		res.status(200).json(results)
@@ -15,7 +15,7 @@ const getAllExperiences = async (req, res) => {
 	}
 }
 
-const getExperienceById = async (req, res) => {
+const getById = async (req, res) => {
 	try {
 		const results = await getExperienceById(req, res)
 		res.status(200).json(results)
@@ -24,7 +24,7 @@ const getExperienceById = async (req, res) => {
 	}
 }
 
-const addExperience = async (req, res) => {
+const add = async (req, res) => {
     try{
         const results = await addExperience(req, res)
         res.status(200).json(results)
@@ -34,7 +34,7 @@ const addExperience = async (req, res) => {
     }
 }
 
-const updateExperience = async (req, res) => {
+const update = async (req, res) => {
     try{
         const results = await updateExperience(req, res)
         res.status(200).json(results)
@@ -44,7 +44,7 @@ const updateExperience = async (req, res) => {
     }
 }
 
-const removeExperience = async (req, res) => {
+const remove = async (req, res) => {
     try{
         const results = await removeExperience(req, res)
         res.status(200).json(results)
@@ -55,9 +55,9 @@ const removeExperience = async (req, res) => {
 }
 
 module.exports = {
-    getAllExperiences,
-    getExperienceById,
-    addExperience,
-    updateExperience,
-    removeExperience,
+    getAll,
+    getById,
+    add,
+    update,
+    remove,
 }
