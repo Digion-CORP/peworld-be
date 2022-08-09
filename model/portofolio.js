@@ -26,6 +26,7 @@ module.exports = {
 								reject({
 									success: false,
 									message: 'Data Portofolio Tidak Berhasil Di Inputt',
+									data: [],
 								});
 							} else {
 								resolve({

@@ -27,4 +27,20 @@ module.exports = {
 			res.status(400).send(error);
 		}
 	},
+	GetProfileSort: async (req, res) => {
+		try {
+			const result = await Profile.GetProfileSort(req, res);
+			res.status(200).send(result);
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	},
+	GetProfileSearch: async (req, res) => {
+		try {
+			const result = await Profile.GetProfileSearch(req, res);
+			res.status(200).send(result);
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	},
 };
