@@ -19,4 +19,12 @@ router.patch(
 	profileController.UpdateProfilePerekrut
 );
 
+router.delete(
+	'/',
+	verifyAuth.VerifyDeleteProfile,
+	profileController.deleteProfile
+);
+
+router.get('/sort', profileController.GetProfileSort);
+router.get('/search', profileController.GetProfileSearch);
 module.exports = router;

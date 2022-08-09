@@ -43,13 +43,11 @@ module.exports = {
                            where profile_id = '${profile_id}'`,
 							(err, result) => {
 								if (err) {
-									console.log(`error disini , ${err}`);
 									reject({
 										success: false,
 										message: 'Data Profile Tidak Berhasil Di Update',
 									});
 								} else {
-									console.log('error disini 2');
 									resolve({
 										success: true,
 										message: 'Artikel Profile Di Update',
@@ -103,16 +101,14 @@ module.exports = {
                            where profile_id = '${profile_id}'`,
 							(err, result) => {
 								if (err) {
-									console.log(`error disini , ${err}`);
 									reject({
 										success: false,
 										message: 'Data Profile Tidak Berhasil Di Update',
 									});
 								} else {
-									console.log('error disini 2');
 									resolve({
 										success: true,
-										message: 'Artikel Profile Di Update',
+										message: 'Profile Berhasil Di Update',
 										result,
 									});
 								}
@@ -126,6 +122,126 @@ module.exports = {
 					message: 'Foto Profile Tidak Boleh Kosong',
 				});
 			}
+		});
+	},
+	DeleteProfile: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { profile_id } = req.query;
+			db.query(
+				`select * from profiles where profile_id = ${profile_id}`,
+				(err, result) => {
+					if (!result.length || err) {
+						reject({
+							success: false,
+							message: `Profile Dengan  ID = ${profile_id} Tidak Ditemukan `,
+						});
+					} else {
+						deletecover(`./uploads/${result[0].profile_picture}`);
+						db.query(
+							`delete from profiles where profile_id = "${profile_id}" `,
+							(err, result) => {
+								if (err) {
+									reject({
+										success: false,
+										message: `Gagal Menghapus Profile , ${err} `,
+									});
+								} else {
+									resolve({
+										success: true,
+										message: `Profile dengan Profile ID = ${profile_id} Berhasil Dihapus`,
+										result,
+									});
+								}
+							}
+						);
+					}
+				}
+			);
+		});
+	},
+	GetProfileSort: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { limit, page, order_by, sort } = req.query;
+			let offset = page * limit - limit;
+			db.query(
+				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
+				 profiles.profile_job_type , group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 where profiles.profile_status = 'active' AND profiles.profile_role ='pekerja'  GROUP BY profiles.profile_id  ORDER BY ${order_by} ${sort} limit ${limit} OFFSET ${offset}
+				 `,
+				(error, result) => {
+					db.query(
+						`SELECT * from profiles where profile_status = 'active' AND profile_role = 'pekerja'`,
+						(error2, result2) => {
+							let totalpage = Math.ceil(result2.length / limit);
+							if (error || error2) {
+								reject({
+									success: true,
+									message: `Failed To Get profile , ${error} ,error ,${error2}`,
+								});
+							} else {
+								if (result.length == 0) {
+									reject({
+										success: false,
+										message: `No Profile Available To Show`,
+										data: [],
+									});
+								} else {
+									resolve({
+										success: true,
+										message: 'Get Profile Success',
+										totalpage: totalpage,
+										totalRow: result.length,
+										totaldata: result2.length,
+										data: result,
+									});
+								}
+							}
+						}
+					);
+				}
+			);
+		});
+	},
+	GetProfileSearch: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { limit, page, skill_location } = req.query;
+			db.query(
+				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
+				 profiles.profile_job_type , group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 where profiles.profile_status = 'active' AND profiles.profile_role ='pekerja' AND skill.skill_name like '%${skill_location}%' OR profiles.profile_location like '%${skill_location}%' GROUP BY profiles.profile_id
+				 `,
+				(error, result) => {
+					db.query(
+						`SELECT * from profiles where profile_status = 'active' AND profile_role = 'pekerja'`,
+						(error2, result2) => {
+							let totalpage = Math.ceil(result2.length / limit);
+							if (error || error2) {
+								reject({
+									success: true,
+									message: `Failed To Get profile , ${error} ,error ,${error2}`,
+								});
+							} else {
+								if (result.length == 0) {
+									reject({
+										success: false,
+										message: `No Profile Available To Show`,
+										data: [],
+									});
+								} else {
+									resolve({
+										success: true,
+										message: 'Get Profile Success',
+										totalpage: totalpage,
+										totalRow: result.length,
+										totaldata: result2.length,
+										data: result,
+									});
+								}
+							}
+						}
+					);
+				}
+			);
 		});
 	},
 };
