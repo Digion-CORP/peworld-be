@@ -43,4 +43,12 @@ module.exports = {
 			res.status(400).send(error);
 		}
 	},
+	GetSingleProfile: async (req, res) => {
+		try {
+			const result = await Profile.GetsingleProfile(req, res);
+			res.status(200).send(result);
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	},
 };

@@ -244,4 +244,37 @@ module.exports = {
 			);
 		});
 	},
+	GetsingleProfile: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { profile_id } = req.query;
+			db.query(
+				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
+				 profiles.profile_job_type ,profile_phone_number , profile_picture, profile_description, profile_instagram , profile_github ,profile_gitlab,profile_email, group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 where profiles.profile_id = ${profile_id}
+				 `,
+				(error, result) => {
+					if (error) {
+						reject({
+							success: true,
+							message: `Failed To Get profile , ${error} ,error ,${error2}`,
+						});
+					} else {
+						if (result.length == 0) {
+							reject({
+								success: false,
+								message: `No Profile Available To Show`,
+								data: [],
+							});
+						} else {
+							resolve({
+								success: true,
+								message: 'Get Profile Success',
+								data: result,
+							});
+						}
+					}
+				}
+			);
+		});
+	},
 };
