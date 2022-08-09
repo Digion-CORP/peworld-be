@@ -29,9 +29,9 @@ module.exports = {
       if (profile_password.length < 8) {
         return res.status(404).json({ success: false, message: "Error: Password must be more than 8 characters" })
       }
-      const setData = { profile_name, profile_email, profile_password, profile_company, profile_sub_company, profile_phone_number }
+      const setData = { profile_name, profile_email, profile_password, profile_role, profile_company, profile_sub_company, profile_phone_number }
       const result = await Auth.registerPerekrut(setData, profile_id)
-      return res.status(201).json({ success: true, message: 'Success register, please check email to verify acount', data: result })
+      return res.status(201).json({ success: true, message: 'Success register', data: result })
     } catch (err) {
       return res.status(400).json({ success: false, message: `Error: ${err.message}` })
     }
