@@ -16,5 +16,3 @@ app.use('/portofolio', portofolioRouter);
 app.use('/notification', notificationRouter);
 
 module.exports = app;
-
-//
