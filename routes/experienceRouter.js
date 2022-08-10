@@ -1,18 +1,18 @@
 const express = require("express")
 const router = express.Router()
 const {
-	add,
 	getAll,
 	getById,
+	add,
 	update,
 	remove,
 } = require("../controller/experienceController")
 const verifyAuth = require("../helper/verifyAuth/verifyAuth")
 
-router.post("/", verifyAuth, add)
+router.post("/",  add)
 
-router.get("/", verifyAuth, getAll)
-router.get("/id",verifyAuth, getById)
-router.patch("/:id",verifyAuth, update)
-router.delete("/del",verifyAuth, remove)
+router.get("/", getAll)
+router.get("/id",getById)
+router.patch("/update",update)
+router.delete("/delete",remove)
 module.exports = router

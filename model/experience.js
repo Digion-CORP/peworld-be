@@ -30,7 +30,7 @@ const getAllExperiences = async (req, res) => {
 
 const getExperienceById = async (req, res) => {
 	return new Promise((resolve, reject) => {
-		const {profile_id} = req.query
+		const { profile_id } = req.query
 		const sqlQuery = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
 		db.query(sqlQuery, (error, results) => {
 			if (error) {
@@ -43,25 +43,24 @@ const getExperienceById = async (req, res) => {
 				if (results.length === 0) {
 					reject({
 						success: false,
-						message: "No experience found",
+						message: `No experience found for this profile id: ${profile_id}`,
 						data: [],
 					})
-				}
-				else {
+				} else {
 					resolve({
 						success: true,
 						message: "Successfully get experience",
 						data: results,
 					})
 				}
-				
 			}
 		})
 	})
 }
 
 const addExperience = async (req, res) => {
-	const {profile_id,
+	const {
+		profile_id,
 		experience_company,
 		experience_position,
 		experience_date_start,
@@ -85,15 +84,14 @@ const addExperience = async (req, res) => {
 					data: results,
 				})
 			}
-			
 		})
 	})
 }
 
 const updateExperience = async (req, res) => {
 	return new Promise((resolve, reject) => {
-		const {profile_id} = req.query
-		const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id}`
+		const { profile_id, experience_id } = req.query
+		const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id} AND experience_id = ${experience_id}`
 		db.query(querySelect, (error, results) => {
 			if (error) {
 				reject({
@@ -101,8 +99,7 @@ const updateExperience = async (req, res) => {
 					message: "Error while getting experience",
 					data: error,
 				})
-			}
-			else if (results.affectedRows === 0) {
+			} else if (results.length === 0) {
 				reject({
 					success: false,
 					message: "Experience not found",
@@ -113,7 +110,7 @@ const updateExperience = async (req, res) => {
 					...results[0],
 					...req.body,
 				}
-				const queryUpdate = `UPDATE ${tb_exp} SET experience_company = '${prevData.experience_company}', experience_position = '${prevData.experience_position}', experience_date_start = '${prevData.experience_date_start}', experience_date_end = '${prevData.experience_date_end}', experience_description = '${prevData.experience_description}' WHERE profile_id = ${profile_id}`
+				const queryUpdate = `UPDATE ${tb_exp} SET experience_company = '${prevData.experience_company}', experience_position = '${prevData.experience_position}', experience_date_start = '${prevData.experience_date_start}', experience_date_end = '${prevData.experience_date_end}', experience_description = '${prevData.experience_description}' WHERE profile_id = ${profile_id} AND experience_id = ${experience_id}`
 				db.query(queryUpdate, (error, results) => {
 					if (error) {
 						reject({
@@ -121,7 +118,7 @@ const updateExperience = async (req, res) => {
 							message: "Error while updating experience",
 							data: error,
 						})
-					} else {
+					}  else {
 						resolve({
 							success: true,
 							message: "Successfully update experience",
@@ -136,23 +133,22 @@ const updateExperience = async (req, res) => {
 
 const removeExperience = async (req, res) => {
 	return new Promise((resolve, reject) => {
-		const {profile_id, experience_company} = req.query
-		const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = ${profile_id} AND experience_company = '${experience_company}'`
-		const queryRemove = `DELETE FROM ${tb_exp} WHERE profile_id = ${profile_id} AND experience_company = '${experience_company}'`
+		const { profile_id, experience_id } = req.query
+		const querySelect = `SELECT * FROM ${tb_exp} WHERE profile_id = '${profile_id}'`
 		db.query(querySelect, (error, results) => {
 			if (error) {
 				reject({
 					success: false,
-					message: "Error while getting experience",
+					message: "Delete experience failed",
 					data: error,
 				})
-			}
-			else if (results.affectedRows === 0) {
+			} else if (results.length === 0) {
 				reject({
 					success: false,
-					message: "Experience not found",
+					message: "Data not found",
 				})
-			} else {
+			}else{
+				const queryRemove = `DELETE FROM ${tb_exp} WHERE profile_id = '${profile_id}' AND experience_id = '${experience_id}'`
 				db.query(queryRemove, (error, results) => {
 					if (error) {
 						reject({
@@ -164,13 +160,12 @@ const removeExperience = async (req, res) => {
 						resolve({
 							success: true,
 							message: "Successfully remove experience",
-							data: {
-								id: results,
-							},
+							data: results,
 						})
 					}
 				})
 			}
+		
 		})
 	})
 }
