@@ -19,10 +19,11 @@ randomString = (length) => {
 module.exports = {
 	registerPerekrut: async (req, res) => {
 		try {
-			let { profile_id, profile_name, profile_email, profile_password, profile_password_confirm, profile_role, profile_company, profile_sub_company, profile_phone_number } = req.body
-			let profile_picture = 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png'
+			let { profile_id, profile_name, profile_email, profile_password, profile_password_confirm, profile_role, profile_company, profile_sub_company, profile_phone_number, profile_picture } = req.body
+			profile_picture = 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png'
 			profile_email = profile_email.toLowerCase()
 			profile_role = 'perekrut'
+			profile_picture = req.file ? req.file.filename : 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png'
 			if (profile_password !== profile_password_confirm) {
 				return res.status(404).json({ success: false, message: "Error: Password and Confirm Password must be same" })
 			}
@@ -32,9 +33,8 @@ module.exports = {
 			if (profile_password.length < 8) {
 				return res.status(404).json({ success: false, message: "Error: Password must be more than 8 characters" })
 			}
-			const setData = { profile_name, profile_email, profile_password, profile_role, profile_company, profile_sub_company, profile_phone_number }
+			const setData = { profile_name, profile_email, profile_password, profile_role, profile_company, profile_sub_company, profile_phone_number, profile_picture }
 			const result = await Auth.registerPerekrut(setData, profile_id)
-			console.log(result, 'yuyu')
 			return res.status(201).json({ success: true, message: 'Success register', data: result })
 		} catch (err) {
 			return res.status(400).json({ success: false, message: `Error: ${err.message}` })
@@ -83,9 +83,9 @@ module.exports = {
 				profile_password,
 				profile_role,
 				profile_phone_number,
+				profile_picture,
 			};
 			const result = await Auth.registerPekerja(setData, profile_id)
-			console.log(result, 'opop')
 			return res.status(201).json({
 				success: true,
 				message: 'Success register',
@@ -140,7 +140,7 @@ module.exports = {
 		try {
 			let { profile_email } = req.params
 			let result = await Auth.checkEmail(profile_email)
-			if (!result) {
+			if (result.length < 1) {
 				return res.status(400).json({ success: false, message: `Error: Email not found` })
 			}
 			code = randomString(20)
@@ -150,12 +150,12 @@ module.exports = {
 				subject: "Reset Password !",
 				template: "forgot-password",
 				data: {
-					// url: `:3001/auth/reset-pass/form/{code}`, url fe
+					url: `http://localhost:3000/resetpassword/${code}`,
 					email: profile_email,
 				}
 			}
 			await sendEmailForgotPass(setDataEmail)
-			return res.status(200).json({ success: true, message: 'Success sent email reset password' })
+			return res.status(200).json({ success: true, message: 'Success sent email reset password', data: `${code}` })
 		}
 		catch (err) {
 			return res.status(400).json({ success: false, message: `Error: ${err.message}` })
@@ -163,14 +163,14 @@ module.exports = {
 	},
 	resetPass: async (req, res) => {
 		try {
-			let { profile_email } = req.params
+			let { profile_email, profile_key } = req.params
 			let checkEmail = await Auth.checkEmail(profile_email)
 			if (!checkEmail) {
 				return res.status(400).json({ success: false, message: `Error: Email not found` })
 			}
-			// if(checkEmail.profile_key!= 'iki diisi opo?'){
-			//   return res.status(400).json({ success: false, message: 'Error: Key must be same' })
-			// }
+			if (checkEmail[0].profile_key != profile_key) {
+				return res.status(400).json({ success: false, message: 'Error: Key must be same' })
+			}
 			let { profile_password, profile_password_confirm } = req.body
 			if (profile_password !== profile_password_confirm) {
 				return res.status(400).json({ success: false, message: 'Error: New Password and Confrim Password must be same' })

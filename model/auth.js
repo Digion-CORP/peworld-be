@@ -6,14 +6,14 @@ const bcrypt = require('bcrypt');
 module.exports = {
 	registerPekerja: (setData, profile_id) => {
 		return new Promise((resolve, reject) => {
-			profile_id = result.insertId;
 			bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
 				if (err) {
 					reject(`${err.sqlMessage}`);
 				} else {
-					db.query(
+					const dbQuery = db.query(
 						`SELECT * From profiles where profile_email = '${setData.profile_email}'`,
 						(err, result) => {
+							profile_id = result.insertId;
 							if (err) {
 								reject({
 									success: false,
@@ -44,6 +44,7 @@ module.exports = {
 							}
 						}
 					);
+					console.log(dbQuery.sql)
 				}
 			});
 		});
@@ -141,6 +142,7 @@ module.exports = {
 											{
 												profile_id: results[0].profile_id,
 												profile_role: results[0].profile_role,
+												profile_email: results[0].profile_email,
 											},
 											process.env.JWT_SECRET_KEY,
 											{
@@ -154,6 +156,7 @@ module.exports = {
 												token,
 												profile_id: results[0].profile_id,
 												profile_role: results[0].profile_role,
+												profile_email: results[0].profile_email,
 											},
 										});
 									} else {
@@ -173,17 +176,16 @@ module.exports = {
 	checkEmail: (profile_email) => {
 		return new Promise((resolve, reject) => {
 			const dbQuery = db.query(
-				`SELECT profile_email from profiles WHERE profile_email='${profile_email}'`,
+				`SELECT * from profiles WHERE profile_email='${profile_email}'`,
 				(err, result) => {
 					if (err) {
 						reject(`${err.sqlMessage}`);
 					}
-					resolve({
-						result,
-					});
+					resolve(
+						result
+					);
 				}
 			);
-			// console.log(dbQuery.sql)
 		});
 	},
 	generateCode: (profile_email, code) => {
@@ -194,12 +196,11 @@ module.exports = {
 					if (err) {
 						reject(`${err.sqlMessage}`);
 					}
-					resolve({
+					resolve(
 						result,
-					});
+					);
 				}
 			);
-			// console.log(dbQuery.sql)
 		});
 	},
 	confirmPass: (profile_email, profile_password) => {
@@ -215,7 +216,7 @@ module.exports = {
 					}
 					resolve(result);
 				}
-			);
+			)
 		});
 	},
 };

@@ -68,7 +68,7 @@ module.exports = {
 	},
 	UpdateProfilePerekrut: (req, res) => {
 		return new Promise((resolve, reject) => {
-			const {
+			let {
 				profile_name,
 				profile_picture,
 				profile_company,
@@ -80,7 +80,9 @@ module.exports = {
 				profile_phone_number,
 				profile_description,
 			} = req.body;
+			profile_picture = req.file.filename
 			const { profile_id } = req.query;
+			const setData = { ...req.body, profile_picture, updated_at: new Date(Date.now()) }
 			if (req.file) {
 				if (FileValidation(req.file.filename) != 1) {
 					reject({
@@ -96,9 +98,7 @@ module.exports = {
 						});
 					} else {
 						db.query(
-							`UPDATE profiles SET profile_picture='${req.file.filename}', profile_name='${profile_name}',profile_company = '${profile_company}',profile_sub_company='${profile_sub_company}',profile_instagram='${profile_instagram}',profile_linkedin='${profile_linkedin}',
-                            profile_github='${profile_github}',profile_location='${profile_location}',profile_phone_number='${profile_phone_number}',profile_description='${profile_description}'
-                           where profile_id = '${profile_id}'`,
+							`UPDATE profiles SET ? where profile_id = '${profile_id}'`, setData,
 							(err, result) => {
 								if (err) {
 									reject({
@@ -249,7 +249,7 @@ module.exports = {
 			const { profile_id } = req.query;
 			db.query(
 				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
-				 profiles.profile_job_type ,profile_phone_number , profile_picture, profile_description, profile_instagram , profile_github ,profile_gitlab,profile_email, group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 profiles.profile_job_type ,profile_phone_number , profile_picture, profile_description,profile_company,profile_sub_company, profile_instagram , profile_github ,profile_gitlab,profile_email, group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
 				 where profiles.profile_id = ${profile_id}
 				 `,
 				(error, result) => {
