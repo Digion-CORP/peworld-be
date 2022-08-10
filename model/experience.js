@@ -60,13 +60,13 @@ const getExperienceById = async (req, res) => {
 
 const addExperience = async (req, res) => {
 	const {
-		profile_id,
 		experience_company,
 		experience_position,
 		experience_date_start,
 		experience_date_end,
 		experience_description,
-	} = req.body
+	} = req.body;
+	const { profile_id } = req.query;
 	return new Promise((resolve, reject) => {
 		const sqlQuery = `INSERT INTO ${tb_exp} (profile_id, experience_company, experience_position, experience_date_start, experience_date_end, experience_description) VALUES ('${profile_id}','${experience_company}', '${experience_position}', '${experience_date_start}', '${experience_date_end}', '${experience_description}')`
 		db.query(sqlQuery, (error, results) => {
