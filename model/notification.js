@@ -92,4 +92,27 @@ module.exports = {
 			});
 		});
 	},
+	getHireNotification: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { profile_id } = req.query;
+			db.query(
+				`select * from notification where notification_to_id = ${profile_id}`,
+				(errnotif, resultnotif) => {
+					if (errnotif) {
+						console.log(errnotif, 'aosjkdh');
+						reject({
+							success: false,
+							message: 'Get Notification Failed',
+						});
+					} else {
+						resolve({
+							success: true,
+							message: 'Get Notification Success',
+							data: resultnotif,
+						});
+					}
+				}
+			);
+		});
+	},
 };
