@@ -49,7 +49,7 @@ module.exports = {
 	getPortofolioByID: (req, res) => {
 		return new Promise((resolve, reject) => {
 			const { profile_id } = req.query;
-			const sql = `SELECT  portofolio_name , portofolio_picture ,portofolio_repo from portofolio WHERE profile_id =${profile_id}`;
+			const sql = `SELECT  portofolio_id,portofolio_name , portofolio_picture ,portofolio_repo from portofolio WHERE profile_id =${profile_id}`;
 			db.query(sql, (err, result) => {
 				if (err) {
 					reject({
@@ -160,3 +160,7 @@ module.exports = {
 		});
 	},
 };
+
+
+
+//

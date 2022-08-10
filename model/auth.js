@@ -162,6 +162,7 @@ module.exports = {
 												token,
 												profile_id: results[0].profile_id,
 												profile_role: results[0].profile_role,
+												profile_email: results[0].profile_email,
 											},
 										});
 									} else {
