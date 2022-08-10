@@ -165,7 +165,7 @@ module.exports = {
 			let offset = page * limit - limit;
 			db.query(
 				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
-				 profiles.profile_job_type , group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 profiles.profile_job_type ,profile_picture ,group_concat(IFNULL(skill.skill_name,'')) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
 				 where profiles.profile_status = 'active' AND profiles.profile_role ='pekerja'  GROUP BY profiles.profile_id  ORDER BY ${order_by} ${sort} limit ${limit} OFFSET ${offset}
 				 `,
 				(error, result) => {
@@ -207,7 +207,7 @@ module.exports = {
 			const { limit, page, skill_location } = req.query;
 			db.query(
 				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
-				 profiles.profile_job_type , group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 profiles.profile_job_type , ,profile_picture,group_concat(IFNULL(skill.skill_name,'')) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
 				 where profiles.profile_status = 'active' AND profiles.profile_role ='pekerja' AND skill.skill_name like '%${skill_location}%' OR profiles.profile_location like '%${skill_location}%' GROUP BY profiles.profile_id
 				 `,
 				(error, result) => {
@@ -249,14 +249,14 @@ module.exports = {
 			const { profile_id } = req.query;
 			db.query(
 				`SELECT  profiles.profile_id, profiles.profile_name , profiles.profile_role , profiles.profile_location , profiles.profile_job ,
-				 profiles.profile_job_type ,profile_phone_number , profile_picture, profile_description, profile_instagram , profile_github ,profile_gitlab,profile_email, group_concat(skill.skill_name) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
+				 profiles.profile_job_type ,profile_phone_number , profile_picture, profile_description, profile_instagram , profile_github ,profile_gitlab,profile_email, group_concat(IFNULL(skill.skill_name,'')) as skill from profiles left join skill on profiles.profile_id = skill.profile_id
 				 where profiles.profile_id = ${profile_id}
 				 `,
 				(error, result) => {
 					if (error) {
 						reject({
 							success: true,
-							message: `Failed To Get profile , ${error} ,error ,${error2}`,
+							message: `Failed To Get profile , ${error}`,
 						});
 					} else {
 						if (result.length == 0) {
