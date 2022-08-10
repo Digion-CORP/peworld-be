@@ -8,6 +8,7 @@ const skillRouter = require('./skillRouter');
 const portofolioRouter = require('./portofolioRouter');
 const notificationRouter = require('./notificationRouter');
 
+
 app.use('/auth', authRouter);
 app.use('/profile', profileRouter);
 app.use('/skill', skillRouter);

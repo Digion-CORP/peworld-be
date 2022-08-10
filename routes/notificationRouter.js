@@ -10,10 +10,6 @@ router.post(
 	verifyAuth.VerifyNotificationPerekrut,
 	notificationController.addHireNotification
 );
-router.get(
-	'/hire',
-	verifyAuth.VerifyUser,
-	notificationController.getHireNotification
-);
+router.get('/hire', notificationController.getHireNotification);
 
 module.exports = router;
