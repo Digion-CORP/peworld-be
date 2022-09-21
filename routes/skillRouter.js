@@ -11,3 +11,6 @@ router.delete('/', verifyAuth.VerifyUser, skillController.deleteSkill);
 router.patch('/', verifyAuth.VerifyUser, skillController.updateSkill);
 
 module.exports = router;
+
+
+//
