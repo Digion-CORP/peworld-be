@@ -1,9 +1,9 @@
 /** @format */
 
-const express = require('express');
-const router = express.Router();
-const verifyAuth = require('../helper/verifyAuth/verifyAuth');
-const notificationController = require('../controller/notificationController');
+const express = require('express')
+const router = express.Router()
+const verifyAuth = require('../helper/verifyAuth/verifyAuth')
+const notificationController = require('../controller/notificationController')
 
 router.post(
 	'/hire',
