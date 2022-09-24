@@ -1,120 +1,120 @@
 /** @format */
-const jwt = require('jsonwebtoken');
-const db = require('../helper/mysql');
-const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
+const db = require('../helper/mysql')
+const bcrypt = require('bcrypt')
 
 module.exports = {
-	registerPekerja: (setData, profile_id) => {
-		return new Promise((resolve, reject) => {
-			bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
-				if (err) {
-					reject(`${err.sqlMessage}`);
-				} else {
-					db.query(
-						`SELECT * From profiles where profile_email = '${setData.profile_email}'`,
-						(err, result) => {
-							if (result.length) {
-								reject({
-									success: false,
-									message: 'Email already exists!',
-								});
-							} else if (err) {
-								reject({
-									success: false,
-									message: 'Error When Regitering Account',
-								});
-							} else {
-								setData.profile_password = hashed;
-								db.query(
-									`INSERT INTO profiles SET ?`,
-									setData,
-									(err, result) => {
-										delete setData.profile_password;
-										profile_id = result.insertId;
-										if (err) {
-											if (err.code == 'ER_DUP_ENTRY') {
-												reject({
-													message: 'Email already exists!',
-												});
-											} else {
-												reject({
-													message: err.sqlMessage,
-												});
-											}
-										}
-										resolve({ profile_id, ...setData });
-									}
-								);
-							}
-						}
-					);
-				}
-			});
-		});
-	},
-	registerPerekrut: (setData, profile_id) => {
-		return new Promise((resolve, reject) => {
-			bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
-				if (err) {
-					reject(`${err.sqlMessage}`);
-				} else {
-					db.query(
-						`SELECT * From profiles where profile_email = '${setData.profile_email}'`,
-						(err, result) => {
-							if (result.length) {
-								reject({
-									success: false,
-									message: 'Email already exists!',
-								});
-							} else if (err) {
-								reject({
-									success: false,
-									message: 'Error When Regitering Account',
-								});
-							} else {
-								setData.profile_password = hashed;
-								db.query(
-									`INSERT INTO profiles SET ?`,
-									setData,
-									(err, result) => {
-										delete setData.profile_password;
-										profile_id = result.insertId;
-										if (err) {
-											if (err.code == 'ER_DUP_ENTRY') {
-												reject({
-													message: 'Email already exists!',
-												});
-											} else {
-												reject({
-													message: err.sqlMessage,
-												});
-											}
-										}
-										resolve({ profile_id, ...setData });
-									}
-								);
-							}
-						}
-					);
-				}
-			});
-		});
-	},
-	activation: (profile_id) => {
-		return new Promise((resolve, reject) => {
-			const dbQuery = db.query(
-				`UPDATE profiles SET profile_status='active' WHERE profile_id=${profile_id}`,
-				(err, result) => {
-					if (err) {
-						reject(`${err.sqlMessage}`);
-					}
-					resolve({
-						result,
-					});
-				}
-			);
-		});
-	},
+  registerPekerja: (setData, profile_id) => {
+    return new Promise((resolve, reject) => {
+      bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
+        if (err) {
+          reject(`${err.sqlMessage}`)
+        } else {
+          db.query(
+            `SELECT * From profiles where profile_email = '${setData.profile_email}'`,
+            (err, result) => {
+              if (result.length) {
+                reject({
+                  success: false,
+                  message: 'Email already exists!',
+                })
+              } else if (err) {
+                reject({
+                  success: false,
+                  message: 'Error When Regitering Account',
+                })
+              } else {
+                setData.profile_password = hashed
+                db.query(
+                  `INSERT INTO profiles SET ?`,
+                  setData,
+                  (err, result) => {
+                    delete setData.profile_password
+                    profile_id = result.insertId
+                    if (err) {
+                      if (err.code == 'ER_DUP_ENTRY') {
+                        reject({
+                          message: 'Email already exists!',
+                        })
+                      } else {
+                        reject({
+                          message: err.sqlMessage,
+                        })
+                      }
+                    }
+                    resolve({ profile_id, ...setData })
+                  },
+                )
+              }
+            },
+          )
+        }
+      })
+    })
+  },
+  registerPerekrut: (setData, profile_id) => {
+    return new Promise((resolve, reject) => {
+      bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
+        if (err) {
+          reject(`${err.sqlMessage}`)
+        } else {
+          db.query(
+            `SELECT * From profiles where profile_email = '${setData.profile_email}'`,
+            (err, result) => {
+              if (result.length) {
+                reject({
+                  success: false,
+                  message: 'Email already exists!',
+                })
+              } else if (err) {
+                reject({
+                  success: false,
+                  message: 'Error When Regitering Account',
+                })
+              } else {
+                setData.profile_password = hashed
+                db.query(
+                  `INSERT INTO profiles SET ?`,
+                  setData,
+                  (err, result) => {
+                    delete setData.profile_password
+                    profile_id = result.insertId
+                    if (err) {
+                      if (err.code == 'ER_DUP_ENTRY') {
+                        reject({
+                          message: 'Email already exists!',
+                        })
+                      } else {
+                        reject({
+                          message: err.sqlMessage,
+                        })
+                      }
+                    }
+                    resolve({ profile_id, ...setData })
+                  },
+                )
+              }
+            },
+          )
+        }
+      })
+    })
+  },
+  activation: (profile_id) => {
+    return new Promise((resolve, reject) => {
+      const dbQuery = db.query(
+        `UPDATE profiles SET profile_status='active' WHERE profile_id=${profile_id}`,
+        (err, result) => {
+          if (err) {
+            reject(`${err.sqlMessage}`)
+          }
+          resolve({
+            result,
+          })
+        },
+      )
+    })
+  },
 
 	login: (req, res) => {
 		return new Promise((resolve, reject) => {
@@ -162,6 +162,7 @@ module.exports = {
 												token,
 												profile_id: results[0].profile_id,
 												profile_role: results[0].profile_role,
+												profile_email: results[0].profile_email,
 											},
 										});
 									} else {
@@ -227,3 +228,4 @@ module.exports = {
 		});
 	},
 };
+
