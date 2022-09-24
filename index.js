@@ -26,7 +26,7 @@ app.use('/api/v1', router)
 app.use('/api/v1/*', (req, res) => {
   res.status(404).send('URL not found!')
 })
-
+app.get("/", (req, res) => res.send("service is running"))
 app.listen(port, () => {
   console.log(`Backend listening on port ${port}`)
 })
