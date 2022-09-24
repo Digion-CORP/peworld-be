@@ -30,3 +30,4 @@ app.use('/api/v1/*', (req, res) => {
 app.listen(port, () => {
   console.log(`Backend listening on port ${port}`)
 })
+app.get("/", (req, res) => res.send("service is running"))
