@@ -116,115 +116,116 @@ module.exports = {
     })
   },
 
-  login: (req, res) => {
-    return new Promise((resolve, reject) => {
-      const { profile_email, profile_password } = req.body
-      db.query(
-        `SELECT profile_id , profile_email , profile_password ,profile_role FROM profiles  WHERE profile_email='${profile_email.toLowerCase()}'`,
-        (err, results) => {
-          if (err) {
-            return res.status(404).json({
-              success: false,
-              message: `Error When Checking Data to Database `,
-            })
-          } else {
-            if (!results.length) {
-              return res.status(404).json({
-                success: false,
-                message: `Email Not Registered ! `,
-              })
-            } else {
-              bcrypt.compare(
-                profile_password,
-                results[0].profile_password,
-                function (err, result) {
-                  if (err) {
-                    return res.status(404).json({
-                      success: false,
-                      message: `Error When Decrypt Password `,
-                    })
-                  }
-                  if (result) {
-                    const token = jwt.sign(
-                      {
-                        profile_id: results[0].profile_id,
-                        profile_role: results[0].profile_role,
-                      },
-                      process.env.JWT_SECRET_KEY,
-                      {
-                        expiresIn: '1d',
-                      },
-                    )
-                    return res.status(201).json({
-                      success: true,
-                      message: 'Login Success',
-                      data: {
-                        token,
-                        profile_id: results[0].profile_id,
-                        profile_role: results[0].profile_role,
-                        profile_email: results[0].profile_email,
-                      },
-                    })
-                  } else {
-                    return res.status(404).json({
-                      success: false,
-                      message: `Email/Password Incorrect !`,
-                    })
-                  }
-                },
-              )
-            }
-          }
-        },
-      )
-    })
-  },
-  checkEmail: (profile_email) => {
-    return new Promise((resolve, reject) => {
-      const dbQuery = db.query(
-        `SELECT profile_email from profiles WHERE profile_email='${profile_email}'`,
-        (err, result) => {
-          if (err) {
-            reject(`${err.sqlMessage}`)
-          }
-          resolve({
-            result,
-          })
-        },
-      )
-      // console.log(dbQuery.sql)
-    })
-  },
-  generateCode: (profile_email, code) => {
-    return new Promise((resolve, reject) => {
-      const dbQuery = db.query(
-        `UPDATE profiles SET profile_key='${code}' WHERE profile_email='${profile_email}'`,
-        (err, result) => {
-          if (err) {
-            reject(`${err.sqlMessage}`)
-          }
-          resolve({
-            result,
-          })
-        },
-      )
-      // console.log(dbQuery.sql)
-    })
-  },
-  confirmPass: (profile_email, profile_password) => {
-    return new Promise((resolve, reject) => {
-      const dbQuery = db.query(
-        `UPDATE profiles SET profile_password = '${profile_password}',profile_key = '' WHERE profile_email = '${profile_email}'`,
-        (error, result) => {
-          if (error) {
-            reject({
-              success: false,
-              message: error.sqlMessage,
-            })
-          }
-          resolve(result)
-        },
-      )
-    })
-  },
-}
+	login: (req, res) => {
+		return new Promise((resolve, reject) => {
+			const { profile_email, profile_password } = req.body;
+			db.query(
+				`SELECT profile_id , profile_email , profile_password ,profile_role FROM profiles  WHERE profile_email='${profile_email.toLowerCase()}'`,
+				(err, results) => {
+					if (err) {
+						return res.status(404).json({
+							success: false,
+							message: `Error When Checking Data to Database `,
+						});
+					} else {
+						if (!results.length) {
+							return res.status(404).json({
+								success: false,
+								message: `Email Not Registered ! `,
+							});
+						} else {
+							bcrypt.compare(
+								profile_password,
+								results[0].profile_password,
+								function (err, result) {
+									if (err) {
+										return res.status(404).json({
+											success: false,
+											message: `Error When Decrypt Password `,
+										});
+									}
+									if (result) {
+										const token = jwt.sign(
+											{
+												profile_id: results[0].profile_id,
+												profile_role: results[0].profile_role,
+											},
+											process.env.JWT_SECRET_KEY,
+											{
+												expiresIn: '1d',
+											}
+										);
+										return res.status(201).json({
+											success: true,
+											message: 'Login Success',
+											data: {
+												token,
+												profile_id: results[0].profile_id,
+												profile_role: results[0].profile_role,
+												profile_email: results[0].profile_email,
+											},
+										});
+									} else {
+										return res.status(404).json({
+											success: false,
+											message: `Email/Password Incorrect !`,
+										});
+									}
+								}
+							);
+						}
+					}
+				}
+			);
+		});
+	},
+	checkEmail: (profile_email) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`SELECT profile_email from profiles WHERE profile_email='${profile_email}'`,
+				(err, result) => {
+					if (err) {
+						reject(`${err.sqlMessage}`);
+					}
+					resolve({
+						result,
+					});
+				}
+			);
+			// console.log(dbQuery.sql)
+		});
+	},
+	generateCode: (profile_email, code) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`UPDATE profiles SET profile_key='${code}' WHERE profile_email='${profile_email}'`,
+				(err, result) => {
+					if (err) {
+						reject(`${err.sqlMessage}`);
+					}
+					resolve({
+						result,
+					});
+				}
+			);
+			// console.log(dbQuery.sql)
+		});
+	},
+	confirmPass: (profile_email, profile_password) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`UPDATE profiles SET profile_password = '${profile_password}',profile_key = '' WHERE profile_email = '${profile_email}'`,
+				(error, result) => {
+					if (error) {
+						reject({
+							success: false,
+							message: error.sqlMessage,
+						});
+					}
+					resolve(result);
+				}
+			);
+		});
+	},
+};
+
