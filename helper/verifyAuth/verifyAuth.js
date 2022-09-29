@@ -29,7 +29,6 @@ const Auth = {
 		}
 	},
 	VerifyUser: (req, res, next) => {
-	
 		if (req.headers.authorization) {
 			const token = req.headers.authorization.split(' ')[1];
 			console.log(token, 'weew');
@@ -262,6 +261,47 @@ const Auth = {
 		} else {
 			return res.status(404).send({
 				message: 'KAMU HARUS LOGIN SEBELUM MELAKUKAN ACTION INI',
+			});
+		}
+	},
+	VerifyNotificationPerekrut: (req, res, next) => {
+		console.log('masuk ke notif');
+		if (req.headers.authorization) {
+			const token = req.headers.authorization.split(' ')[1];
+			const { from_profile_id } = req.query;
+			jwt.verify(token, process.env.JWT_SECRET_KEY, function (err, decoded) {
+				if (err) {
+					return res.status(404).send({
+						success: false,
+						message: 'INVALID TOKEN',
+					});
+				} else if (decoded.profile_id != from_profile_id) {
+					return res.status(404).send({
+						success: false,
+						message: 'INI BUKAN AKUN KAMU !!',
+					});
+				} else if (
+					decoded.profile_id != from_profile_id ||
+					decoded.profile_role != process.env.ROLE_PEREKRUT
+				) {
+					console.log(decoded.profile_id, decoded.role);
+					return res.status(404).send({
+						success: false,
+						message:
+							'Either Your Role Or Your Profile Id That doesn`t match our Authentication',
+					});
+				} else if (
+					decoded.profile_id == from_profile_id &&
+					decoded.profile_role == process.env.ROLE_PEREKRUT
+				) {
+					req.dadada = decoded;
+					next();
+				}
+			});
+		} else {
+			return res.status(404).send({
+				success: false,
+				message: 'KAMU HARUS LOGIN DULU !!',
 			});
 		}
 	},

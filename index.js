@@ -9,7 +9,6 @@ const app = express()
 const { port } = process.env
 const db = require('./helper/mysql');
 const router = require('./routes/index')
-
 var corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3001'],
   optionsSuccessStatus: 200
@@ -21,7 +20,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 // support parsing of application/json type post data
 app.use(bodyParser.json());
-app.use('/static', express.static('uploads'))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/v1', router)
 app.use('/api/v1/*', (req, res) => {
   res.status(404).send('URL not found!')
