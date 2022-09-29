@@ -16,3 +16,8 @@ router.get("/id",getById)
 router.patch("/update",update)
 router.delete("/delete",remove)
 module.exports = router
+
+
+
+
+//

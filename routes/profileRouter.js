@@ -1,31 +1,31 @@
 /** @format */
 
-const express = require('express');
-const router = express.Router();
-const profileController = require('../controller/profileController');
-const upload = require('../helper/multer/multer');
-const verifyAuth = require('../helper/verifyAuth/verifyAuth');
+const express = require('express')
+const router = express.Router()
+const profileController = require('../controller/profileController')
+const upload = require('../helper/multer/multer')
+const verifyAuth = require('../helper/verifyAuth/verifyAuth')
 
 router.patch(
-	'/pekerja',
-	verifyAuth.VerifyUpdateProfilePekerja,
-	upload.single('profile_picture'),
-	profileController.UpdateProfilePekerja
-);
+  '/pekerja',
+  verifyAuth.VerifyUpdateProfilePekerja,
+  upload.single('profile_picture'),
+  profileController.UpdateProfilePekerja,
+)
 router.patch(
-	'/perekrut',
-	verifyAuth.VerifyUpdateProfilePerekrut,
-	upload.single('profile_picture'),
-	profileController.UpdateProfilePerekrut
-);
+  '/perekrut',
+  verifyAuth.VerifyUpdateProfilePerekrut,
+  upload.single('profile_picture'),
+  profileController.UpdateProfilePerekrut,
+)
 
 router.delete(
-	'/',
-	verifyAuth.VerifyDeleteProfile,
-	profileController.deleteProfile
-);
+  '/',
+  verifyAuth.VerifyDeleteProfile,
+  profileController.deleteProfile,
+)
 
-router.get('/sort', profileController.GetProfileSort);
-router.get('/search', profileController.GetProfileSearch);
-router.get('/', profileController.GetSingleProfile);
-module.exports = router;
+router.get('/sort', profileController.GetProfileSort)
+router.get('/search', profileController.GetProfileSearch)
+router.get('/', profileController.GetSingleProfile)
+module.exports = router

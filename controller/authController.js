@@ -183,5 +183,14 @@ module.exports = {
 		} catch (err) {
 			return res.status(400).json({ success: false, message: `Error: ${err.message}` })
 		}
+<<<<<<< HEAD
 	}
 }
+=======
+	},
+};
+
+
+
+//
+>>>>>>> 76cb555271eaa6166713477e1104bad409d84375
