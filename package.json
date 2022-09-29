@@ -7,6 +7,9 @@
     "start": "nodemon index.js"
   },
   "main": "index.js",
+  "engines": {
+    "node": "16.x"
+  },
   "author": "digion-corp",
   "license": "MIT",
   "dependencies": {

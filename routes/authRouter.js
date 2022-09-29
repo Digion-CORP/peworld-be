@@ -2,13 +2,13 @@
 const express = require('express');
 const router = express.Router();
 const {
-	registerPekerja,
-	registerPerekrut,
-	activation,
-	login,
-	sendEmailResetPass,
-	resetPass,
-	sendEmailActivedAcount,
+  registerPekerja,
+  registerPerekrut,
+  activation,
+  login,
+  sendEmailResetPass,
+  resetPass,
+  sendEmailActivedAcount,
 } = require('../controller/authController');
 const { VerifyUser } = require('../helper/verifyAuth/verifyAuth');
 
@@ -17,7 +17,7 @@ router.post('/register-pekerja', registerPekerja);
 router.get('/activation/:profile_email', activation);
 router.post('/login', login);
 router.get('/send-email-reset-pass/:profile_email', sendEmailResetPass);
-router.patch('/reset-pass/:profile_email', resetPass);
+router.patch('/reset-pass/:profile_email/:profile_key', resetPass);
 router.get('/send-email-actived/:profile_email', sendEmailActivedAcount);
 
 module.exports = router;

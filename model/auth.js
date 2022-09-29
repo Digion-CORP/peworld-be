@@ -4,6 +4,112 @@ const db = require('../helper/mysql')
 const bcrypt = require('bcrypt')
 
 module.exports = {
+<<<<<<< HEAD
+	registerPekerja: (setData, profile_id) => {
+		return new Promise((resolve, reject) => {
+			bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
+				if (err) {
+					reject(`${err.sqlMessage}`);
+				} else {
+					const dbQuery = db.query(
+						`SELECT * From profiles where profile_email = '${setData.profile_email}'`,
+						(err, result) => {
+							profile_id = result.insertId;
+							if (err) {
+								reject({
+									success: false,
+									message: 'Error When Regitering Account',
+								});
+							} else {
+								setData.profile_password = hashed;
+								const dbQuery = db.query(
+									`INSERT INTO profiles SET ?`,
+									setData,
+									(err, result) => {
+										delete setData.profile_password;
+										if (err) {
+											if (err.code == 'ER_DUP_ENTRY') {
+												reject({
+													message: 'Email already exists!',
+												});
+											} else {
+												reject({
+													message: err.sqlMessage,
+												});
+											}
+										}
+										resolve({ profile_id, ...setData });
+									}
+								);
+								console.log(dbQuery.sql)
+							}
+						}
+					);
+					console.log(dbQuery.sql)
+				}
+			});
+		});
+	},
+	registerPerekrut: (setData, profile_id) => {
+		return new Promise((resolve, reject) => {
+			bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
+				if (err) {
+					reject(`${err.sqlMessage}`);
+				} else {
+					db.query(
+						`SELECT * From profiles where profile_email = '${setData.profile_email}'`,
+						(err, result) => {
+							if (err) {
+								reject({
+									success: false,
+									message: 'Error When Regitering Account',
+								});
+							} else {
+								setData.profile_password = hashed;
+								const dbQuery = db.query(
+									`INSERT INTO profiles SET ?`,
+									setData,
+									(err, result) => {
+										delete setData.profile_password;
+										profile_id = result.insertId;
+										if (err) {
+											if (err.code == 'ER_DUP_ENTRY') {
+												reject({
+													message: 'Email already exists!',
+												});
+											} else {
+												reject({
+													message: err.sqlMessage,
+												});
+											}
+										}
+										resolve({ profile_id, ...setData });
+									}
+								);
+								console.log(dbQuery.sql)
+							}
+						}
+					);
+				}
+			});
+		});
+	},
+	activation: (profile_id) => {
+		return new Promise((resolve, reject) => {
+			const dbQuery = db.query(
+				`UPDATE profiles SET profile_status='active' WHERE profile_id=${profile_id}`,
+				(err, result) => {
+					if (err) {
+						reject(`${err.sqlMessage}`);
+					}
+					resolve({
+						result,
+					});
+				}
+			);
+		});
+	},
+=======
   registerPekerja: (setData, profile_id) => {
     return new Promise((resolve, reject) => {
       bcrypt.hash(setData.profile_password, 10, (err, hashed) => {
@@ -115,6 +221,7 @@ module.exports = {
       )
     })
   },
+>>>>>>> 76cb555271eaa6166713477e1104bad409d84375
 
 	login: (req, res) => {
 		return new Promise((resolve, reject) => {
@@ -149,6 +256,7 @@ module.exports = {
 											{
 												profile_id: results[0].profile_id,
 												profile_role: results[0].profile_role,
+												profile_email: results[0].profile_email,
 											},
 											process.env.JWT_SECRET_KEY,
 											{
@@ -182,17 +290,16 @@ module.exports = {
 	checkEmail: (profile_email) => {
 		return new Promise((resolve, reject) => {
 			const dbQuery = db.query(
-				`SELECT profile_email from profiles WHERE profile_email='${profile_email}'`,
+				`SELECT * from profiles WHERE profile_email='${profile_email}'`,
 				(err, result) => {
 					if (err) {
 						reject(`${err.sqlMessage}`);
 					}
-					resolve({
-						result,
-					});
+					resolve(
+						result
+					);
 				}
 			);
-			// console.log(dbQuery.sql)
 		});
 	},
 	generateCode: (profile_email, code) => {
@@ -203,12 +310,11 @@ module.exports = {
 					if (err) {
 						reject(`${err.sqlMessage}`);
 					}
-					resolve({
+					resolve(
 						result,
-					});
+					);
 				}
 			);
-			// console.log(dbQuery.sql)
 		});
 	},
 	confirmPass: (profile_email, profile_password) => {
@@ -224,7 +330,7 @@ module.exports = {
 					}
 					resolve(result);
 				}
-			);
+			)
 		});
 	},
 };

@@ -9,7 +9,6 @@ const app = express()
 const { port } = process.env.PORT || 5000
 const db = require('./helper/mysql');
 const router = require('./routes/index')
-
 var corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:3001'],
   optionsSuccessStatus: 200
