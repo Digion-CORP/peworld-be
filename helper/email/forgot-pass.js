@@ -6,6 +6,8 @@ const { user_pass } = process.env
 
 const sendMail = (data, email) =>
   new Promise((resolve, reject) => {
+    console.log(data, 'erere')
+
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,

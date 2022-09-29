@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const sendEmail = require('../helper/email/activation');
 const sendEmailForgotPass = require('../helper/email/forgot-pass');
+// const default_picture = require('../assets/default.png')
 
 randomString = (length) => {
 	let result = '';
@@ -20,10 +21,10 @@ module.exports = {
 	registerPerekrut: async (req, res) => {
 		try {
 			let { profile_id, profile_name, profile_email, profile_password, profile_password_confirm, profile_role, profile_company, profile_sub_company, profile_phone_number, profile_picture } = req.body
-			profile_picture = 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png'
+			// profile_picture = 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png'
 			profile_email = profile_email.toLowerCase()
 			profile_role = 'perekrut'
-			profile_picture = req.file ? req.file.filename : 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png'
+			profile_picture = req.file ? req.file.filename : `https://divedigital.id/wp-content/uploads/2021/10/1-min.png`
 			if (profile_password !== profile_password_confirm) {
 				return res.status(404).json({ success: false, message: "Error: Password and Confirm Password must be same" })
 			}
@@ -51,8 +52,7 @@ module.exports = {
 				profile_role,
 				profile_phone_number,
 			} = req.body;
-			let profile_picture =
-				'https://divedigital.id/wp-content/uploads/2021/10/1-min.png';
+			let profile_picture = req.file ? req.file.filename : 'https://divedigital.id/wp-content/uploads/2021/10/1-min.png';
 			profile_email = profile_email.toLowerCase();
 			profile_role = 'pekerja';
 			if (profile_password !== profile_password_confirm) {
@@ -152,6 +152,7 @@ module.exports = {
 				data: {
 					url: `http://localhost:3000/resetpassword/${code}`,
 					email: profile_email,
+					code: code
 				}
 			}
 			await sendEmailForgotPass(setDataEmail)
@@ -164,6 +165,7 @@ module.exports = {
 	resetPass: async (req, res) => {
 		try {
 			let { profile_email, profile_key } = req.params
+			console.log(req.decode)
 			let checkEmail = await Auth.checkEmail(profile_email)
 			if (!checkEmail) {
 				return res.status(400).json({ success: false, message: `Error: Email not found` })

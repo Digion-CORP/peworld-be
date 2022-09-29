@@ -45,7 +45,7 @@ const Auth = {
 						message: 'INI BUKAN AKUN KAMU !!',
 					});
 				} else {
-					req.dadada = decoded;
+					req.result = decoded;
 					next();
 				}
 			});
